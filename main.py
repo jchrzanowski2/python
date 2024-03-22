@@ -1,9 +1,11 @@
 import pygame
-from character import Character
+from world import World, make_world
+from constants import Constants
+from world_objects import SpriteGroups
 
 pygame.init()
 
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = Constants.SCREEN_WIDTH
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
@@ -13,23 +15,24 @@ moving_left = False
 moving_right = False
 
 clock = pygame.time.Clock()
-FPS = 60
 
 #colors
-BG = (200, 200, 200)
+def draw_bg() -> None:
+    screen.fill(Constants.BG)
 
-def draw_bg():
-    screen.fill(BG)
-
-
-player = Character('player', 200, 400, 3, 5)
+player, world, groups = make_world()
 
 run = True
 while run:
 
-    clock.tick(FPS)
+    clock.tick(Constants.FPS)
+
     draw_bg()
+
+    world.draw(screen)
+
     player.draw(screen)
+
     player.move(moving_left, moving_right)
 
     for event in pygame.event.get():
@@ -50,7 +53,9 @@ while run:
             if event.key == pygame.K_d:
                 moving_right = False
 
+    groups.update_draw(screen)
+
     pygame.display.update()
 
 
-pygame.quit()
+pygame.quit()   

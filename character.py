@@ -1,12 +1,11 @@
 import pygame
-import os
+
 
 class Character(pygame.sprite.Sprite):
-    def __init__(self, char_type, x, y, scale, speed):
+    def __init__(self, char_type : str, x : int, y : int, scale : float, speed : float) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.char_type = char_type
-        character_path = os.path.abspath(f'img/{self.char_type}/character2.png')
-        img = pygame.image.load(character_path)
+        img = pygame.image.load(f'img/{self.char_type}/character2.png')
         self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
@@ -14,7 +13,7 @@ class Character(pygame.sprite.Sprite):
         self.direction = 1
         self.flip = False
 
-    def move(self, moving_left, moving_right):
+    def move(self, moving_left : bool, moving_right : bool) -> None:
         dx = 0
         dy = 0
 
@@ -30,5 +29,5 @@ class Character(pygame.sprite.Sprite):
         self.rect.x += dx
         self.rect.y += dy
 
-    def draw(self, screen):
+    def draw(self, screen : pygame.Surface) -> None:
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
