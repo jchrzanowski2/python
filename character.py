@@ -5,7 +5,7 @@ class Character(pygame.sprite.Sprite):
     def __init__(self, char_type, x, y, scale, speed):
         pygame.sprite.Sprite.__init__(self)
         self.char_type = char_type
-        character_path = os.path.abspath(f'python/img/{self.char_type}/character2.png')
+        character_path = os.path.abspath(f'img/{self.char_type}/character2.png')
         img = pygame.image.load(character_path)
         self.image = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
         self.rect = self.image.get_rect()
