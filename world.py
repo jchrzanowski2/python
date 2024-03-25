@@ -47,8 +47,9 @@ class World():
 
         return player, self.groups
 
-    def draw(self, screen : pygame.Surface) -> None:
+    def draw(self, screen : pygame.Surface, screen_scroll: int) -> None:
         for tile in self.obstacle_list:
+            tile[1][0] += screen_scroll
             screen.blit(tile[0], tile[1])
 
     

@@ -1,6 +1,6 @@
 import pygame
-from world import World, make_world
 from constants import Constants
+from world import World, make_world
 from world_objects import SpriteGroups
 
 pygame.init()
@@ -29,11 +29,11 @@ while run:
 
     draw_bg()
 
-    world.draw(screen)
+    world.draw(screen, Constants.screen_scroll)
 
     player.draw(screen)
 
-    player.move(moving_left, moving_right)
+    Constants.screen_scroll = player.move(moving_left, moving_right, world.obstacle_list)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -44,6 +44,8 @@ while run:
                 moving_left = True
             if event.key == pygame.K_d:
                 moving_right = True
+            if event.key == pygame.K_w:
+                player.jump = True
             if event.key == pygame.K_ESCAPE:
                 run = False
 

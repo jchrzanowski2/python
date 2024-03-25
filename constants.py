@@ -11,3 +11,8 @@ class Constants:
 
     BG = (200, 200, 200) #background colors
     FPS = 60
+
+    GRAVITY = 0.75
+    SCROLL_THRESH = 200
+    screen_scroll = 0
+    bg_scroll = 0

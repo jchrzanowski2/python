@@ -23,12 +23,18 @@ class Decorations(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.midtop = (x + Constants.TILE_SIZE // 2, y + (Constants.TILE_SIZE - self.image.get_height()))
 
+    def update(self):
+        self.rect.x += Constants.screen_scroll
+
 class Water(pygame.sprite.Sprite):
     def __init__(self, img : pygame.Surface, x : int, y : int) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = img
         self.rect = self.image.get_rect()
         self.rect.midtop = (x + Constants.TILE_SIZE // 2, y + (Constants.TILE_SIZE - self.image.get_height()))
+    
+    def update(self):
+        self.rect.x += Constants.screen_scroll
 
 class Exit(pygame.sprite.Sprite):
     def __init__(self, img : pygame.Surface, x : int, y : int) -> None:
@@ -36,6 +42,9 @@ class Exit(pygame.sprite.Sprite):
         self.image = img
         self.rect = self.image.get_rect()
         self.rect.midtop = (x + Constants.TILE_SIZE // 2, y + (Constants.TILE_SIZE - self.image.get_height()))
+
+    def update(self):
+        self.rect.x += Constants.screen_scroll
 
 
 #TODO Other elements?
