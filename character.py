@@ -1,4 +1,6 @@
 import pygame
+from constants import Constants
+# from main import check_scroll
 
 
 class Character(pygame.sprite.Sprite):
@@ -13,9 +15,14 @@ class Character(pygame.sprite.Sprite):
         self.direction = 1
         self.flip = False
 
-    def move(self, moving_left : bool, moving_right : bool) -> None:
+    def set_world_length(self, units : int) -> None:
+        self.world_length = units
+
+    def move(self, moving_left : bool, moving_right : bool) -> float:
         dx = 0
         dy = 0
+
+        screen_scroll = 0
 
         if moving_left:
             dx = -self.speed
@@ -28,6 +35,19 @@ class Character(pygame.sprite.Sprite):
 
         self.rect.x += dx
         self.rect.y += dy
+
+        #scroll movement
+        if self.char_type == 'player':
+            if (self.rect.right > Constants.SCREEN_WIDTH - Constants.SCROLL_THRESH and \
+                bg_scroll < (self.world_length * Constants.TILE_SIZE) - Constants.SCREEN_WIDTH ) \
+                or self.rect.left < Constants.SCROLL_THRESH:
+
+                self.rect.x -= dx
+                screen_scroll = -dx
+        
+        return screen_scroll
+
+
 
     def draw(self, screen : pygame.Surface) -> None:
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)

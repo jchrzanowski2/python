@@ -11,3 +11,7 @@ class Constants:
 
     BG = (200, 200, 200) #background colors
     FPS = 60
+
+    #scrolling
+    SCROLL_THRESH = 200
+ 

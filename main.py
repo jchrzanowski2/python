@@ -1,7 +1,6 @@
 import pygame
 from world import World, make_world
 from constants import Constants
-from world_objects import SpriteGroups
 
 pygame.init()
 
@@ -20,6 +19,12 @@ clock = pygame.time.Clock()
 def draw_bg() -> None:
     screen.fill(Constants.BG)
 
+screen_scroll = 0
+bg_scroll = 0
+
+def check_scroll() -> bool:
+    return bg_scroll < (self.world_length * Constants.TILE_SIZE) - Constants.SCREEN_WIDTH
+
 player, world, groups = make_world()
 
 run = True
@@ -29,12 +34,12 @@ while run:
 
     draw_bg()
 
-    world.draw(screen)
+    world.draw(screen, screen_scroll)
 
     player.draw(screen)
 
-    player.move(moving_left, moving_right)
-
+    screen_scroll = player.move(moving_left, moving_right)
+    bg_scroll -= screen_scroll
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -53,7 +58,7 @@ while run:
             if event.key == pygame.K_d:
                 moving_right = False
 
-    groups.update_draw(screen)
+    groups.update_draw(screen, screen_scroll)
 
     pygame.display.update()
 
