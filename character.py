@@ -41,14 +41,14 @@ class Character(pygame.sprite.Sprite):
         # gravity
         self.vel_y += Constants.GRAVITY
         if self.vel_y > 10:
-            self.vel_y 
+            self.vel_y = 10
         dy += self.vel_y
 
         # check for collistion
         for tile in obstacle_list:
-            if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
+            if pygame.Rect(tile[1]).colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                 dx = 0
-            if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
+            if pygame.Rect(tile[1]).colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
                 # if below the ground
                 if self.vel_y < 0:
                     self.vel_y = 0
@@ -57,8 +57,7 @@ class Character(pygame.sprite.Sprite):
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     self.in_air = False
-                    dy = tile[1].top -self.rect.bottom
-
+                    dy = tile[1].top - self.rect.bottom
 
         self.rect.x += dx
         self.rect.y += dy

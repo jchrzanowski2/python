@@ -44,7 +44,7 @@ while run:
                 moving_left = True
             if event.key == pygame.K_d:
                 moving_right = True
-            if event.key == pygame.K_w:
+            if event.key == pygame.K_w and not player.in_air:
                 player.jump = True
             if event.key == pygame.K_ESCAPE:
                 run = False
