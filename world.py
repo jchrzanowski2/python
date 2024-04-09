@@ -2,7 +2,7 @@ from constants import Constants
 from character import Character
 import pygame
 import csv
-from world_objects import Decorations, Water, Exit, SpriteGroups
+from world_objects import Decorations, Water, Exit, SpriteGroups, Diamond
 
 img_list = []
 
@@ -10,7 +10,6 @@ for x in range(Constants.TILE_TYPES):
     img = pygame.image.load(f"img/tile/{x}.png")
     img = pygame.transform.scale(img, (Constants.TILE_SIZE, Constants.TILE_SIZE))
     img_list.append(img)
-
 
 class World:
     def __init__(self) -> None:
@@ -64,6 +63,12 @@ class World:
                             img, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE
                         )
                         self.groups.exit_group.add(exit)
+                    elif tile == 21:
+                        diamond = Diamond(
+                            img, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE
+                        )
+                        self.groups.diamond_group.add(diamond)
+    
 
         return player, self.groups
 
@@ -71,6 +76,8 @@ class World:
         for tile in self.obstacle_list:
             tile[1][0] += screen_scroll
             screen.blit(tile[0], tile[1])
+        
+
 
 
 def make_world() -> tuple[Character, World, SpriteGroups]:

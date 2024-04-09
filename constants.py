@@ -10,10 +10,13 @@ class Constants:
     COLS = 150
 
     TILE_SIZE = SCREEN_HEIGHT // ROWS
-    TILE_TYPES = 21
+    TILE_TYPES = 22
 
     BG = (200, 200, 200)  # background colors
     FPS = 60
+
+    WHITE = (255,255,255)
+    BLACK = (0,0,0)
 
     GRAVITY = 0.75
     SCROLL_THRESH = 200

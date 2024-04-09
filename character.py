@@ -37,6 +37,7 @@ class Character(pygame.sprite.Sprite):
         self.flip = False
         self.width = self.image.get_width()
         self.height = self.image.get_height()
+        self.points = 0
         # ai specific variables
         self.move_counter = 0
 
