@@ -28,7 +28,7 @@ player, world, groups = make_world()
 start_time = pygame.time.get_ticks()
 def show_game_info():
     elapsed_time = pygame.time.get_ticks() - start_time
-    elapsed_text = font.render("Elapsed Time: {} h {} min {} s".format(elapsed_time//3600000, elapsed_time//60000, elapsed_time//1000), True, Constants.BLACK)
+    elapsed_text = font.render("Elapsed Time: {} h {} min {} s".format(elapsed_time%3600000, elapsed_time%60000, elapsed_time%1000), True, Constants.BLACK)
     screen.blit(elapsed_text, (10, 10))    
 
     points_text = font.render("Points: {}".format(player.points), True, Constants.BLACK)
