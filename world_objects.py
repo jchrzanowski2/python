@@ -62,17 +62,22 @@ class Exit(pygame.sprite.Sprite):
     def update(self):
         self.rect.x += Constants.screen_scroll
 
+
 class Diamond(pygame.sprite.Sprite):
     def __init__(self, img: pygame.Surface, x: int, y: int) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = img
         self.rect = self.image.get_rect()
-        self.rect.midtop = (x + Constants.TILE_SIZE // 2, y + (Constants.TILE_SIZE - self.image.get_height()))
+        self.rect.midtop = (
+            x + Constants.TILE_SIZE // 2,
+            y + (Constants.TILE_SIZE - self.image.get_height()),
+        )
 
     def update(self, player):
         self.rect.x += Constants.screen_scroll
         if pygame.sprite.collide_rect(self, player):
             player.points += 100
             self.kill()
+
 
 # TODO Other elements?

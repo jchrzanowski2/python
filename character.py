@@ -1,11 +1,13 @@
 import pygame
 import os
+import random
 from constants import Constants
+from bullet import Bullet
 
 
 class Character(pygame.sprite.Sprite):
     def __init__(
-        self, char_type: str, x: int, y: int, scale: float, speed: float
+        self, char_type: str, x: int, y: int, scale: float, speed: float, ammo: int
     ) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.alive = True
@@ -13,13 +15,20 @@ class Character(pygame.sprite.Sprite):
         self.animation_list = []
         self.frame_index = 0
         self.action = 0
+        self.shoot_cooldown = 0
+        self.health = 100
+        self.max_health = self.health
+        self.ammo = ammo
+        self.starat_ammo = ammo
         self.update_time = pygame.time.get_ticks()
-        animamation_types = ["Idle", "Run", "Jump"]
+        animamation_types = ["Idle", "Run", "Jump", "Death"]
         for animation in animamation_types:
             temp_list = []
             num_of_frames = len(os.listdir(f"img/{self.char_type}/{animation}"))
             for i in range(num_of_frames):
-                img = pygame.image.load(f"img/{self.char_type}/{animation}/{i}.png")
+                img = pygame.image.load(
+                    f"img/{self.char_type}/{animation}/{i}.png"
+                ).convert_alpha()
                 img = pygame.transform.scale(
                     img, (int(img.get_width() * scale), int(img.get_height() * scale))
                 )
@@ -40,6 +49,16 @@ class Character(pygame.sprite.Sprite):
         self.points = 0
         # ai specific variables
         self.move_counter = 0
+        self.vision = pygame.Rect(0, 0, 150, 20)
+        self.idling = False
+        self.idling_counter = 0
+
+    def update(self):
+        self.update_animation()
+        self.check_alive()
+
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
 
     def move(self, moving_left: bool, moving_right: bool, obstacle_list: list) -> None:
         screen_scroll = 0
@@ -103,6 +122,18 @@ class Character(pygame.sprite.Sprite):
 
         return screen_scroll
 
+    def shoot(self):
+        if self.shoot_cooldown == 0 and self.ammo > 0:
+            self.shoot_cooldown = 20
+            bullet = Bullet(
+                self.rect.centerx + (0.6 * self.rect.size[0] * self.direction),
+                self.rect.centery,
+                self.direction,
+            )
+            Constants.bullet_group.add(bullet)
+
+            self.ammo -= 1
+
     def update_animation(self):
         ANIMATION_COOLDOWN = 100
         self.image = self.animation_list[self.action][self.frame_index]
@@ -110,7 +141,10 @@ class Character(pygame.sprite.Sprite):
             self.update_time = pygame.time.get_ticks()
             self.frame_index += 1
         if self.frame_index >= len(self.animation_list[self.action]):
-            self.frame_index = 0
+            if self.action == 3:
+                self.frame_index = len(self.animation_list[self.action]) - 1
+            else:
+                self.frame_index = 0
 
     def update_action(self, new_action):
         if new_action != self.action:
@@ -118,16 +152,50 @@ class Character(pygame.sprite.Sprite):
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
 
-    def ai(self, obstacle_list):
-        if self.alive:
-            self.update_action(1)
-            if self.direction == 1:
-                ai_moving_right = True
+    def ai(self, obstacle_list, player):
+        if self.alive and player.alive:
+            if self.idling == False and random.randint(1, 200) == 1:
+                self.update_action(0)
+                self.idling = True
+                self.idling_counter = 50
+            # if ai sees player
+            if self.vision.colliderect(player.rect):
+                self.update_action(0)  # idle
+                self.shoot()
             else:
-                ai_moving_right = False
-            ai_moving_left = not ai_moving_right
-            self.move(ai_moving_left, ai_moving_right, obstacle_list)
+                if self.idling == False:
+                    if self.direction == 1:
+                        ai_moving_right = True
+                    else:
+                        ai_moving_right = False
+
+                    ai_moving_left = not ai_moving_right
+                    self.move(ai_moving_left, ai_moving_right, obstacle_list)
+                    self.update_action(1)  # run
+                    self.move_counter += 1
+
+                    # ai vision
+                    self.vision.center = (
+                        self.rect.centerx + 75 * self.direction,
+                        self.rect.centery,
+                    )
+
+                    if self.move_counter > Constants.TILE_SIZE:
+                        self.direction *= -1
+                        self.move_counter *= -1
+                else:
+                    self.idling_counter -= 1
+                    if self.idling_counter == 0:
+                        self.idling = False
+
         self.rect.x += Constants.screen_scroll
+
+    def check_alive(self):
+        if self.health <= 0:
+            self.health = 0
+            self.speed = 0
+            self.alive = False
+            self.update_action(3)
 
     def draw(self, screen: pygame.Surface) -> None:
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)

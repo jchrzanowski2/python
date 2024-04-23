@@ -15,8 +15,8 @@ class Constants:
     BG = (200, 200, 200)  # background colors
     FPS = 60
 
-    WHITE = (255,255,255)
-    BLACK = (0,0,0)
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
 
     GRAVITY = 0.75
     SCROLL_THRESH = 200
@@ -24,3 +24,4 @@ class Constants:
     bg_scroll = 0
 
     enemy_group = pygame.sprite.Group()
+    bullet_group = pygame.sprite.Group()

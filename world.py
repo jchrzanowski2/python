@@ -11,6 +11,7 @@ for x in range(Constants.TILE_TYPES):
     img = pygame.transform.scale(img, (Constants.TILE_SIZE, Constants.TILE_SIZE))
     img_list.append(img)
 
+
 class World:
     def __init__(self) -> None:
         self.obstacle_list = []
@@ -48,6 +49,7 @@ class World:
                             y * Constants.TILE_SIZE,
                             2,
                             5,
+                            20,
                         )
                     elif tile == 16:  # enemy
                         enemy = Character(
@@ -55,7 +57,8 @@ class World:
                             x * Constants.TILE_SIZE,
                             y * Constants.TILE_SIZE,
                             2,
-                            5,
+                            2,
+                            20,
                         )
                         Constants.enemy_group.add(enemy)
                     elif tile == 20:
@@ -68,7 +71,6 @@ class World:
                             img, x * Constants.TILE_SIZE, y * Constants.TILE_SIZE
                         )
                         self.groups.diamond_group.add(diamond)
-    
 
         return player, self.groups
 
@@ -76,8 +78,6 @@ class World:
         for tile in self.obstacle_list:
             tile[1][0] += screen_scroll
             screen.blit(tile[0], tile[1])
-        
-
 
 
 def make_world() -> tuple[Character, World, SpriteGroups]:
