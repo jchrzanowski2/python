@@ -9,10 +9,10 @@ class SpriteGroups:
         self.exit_group = pygame.sprite.Group()
         self.diamond_group = pygame.sprite.Group()
 
-    def update_draw(self, screen: pygame.Surface, player: "Player") -> None:
+    def update_draw(self, screen: pygame.Surface, player: "Player", world) -> None | int:
         self.decoration_group.update()
         self.water_group.update()
-        self.exit_group.update()
+        self.exit_group.update(player, world)
         self.diamond_group.update(player)
         self.decoration_group.draw(screen)
         self.water_group.draw(screen)
@@ -59,8 +59,10 @@ class Exit(pygame.sprite.Sprite):
             y + (Constants.TILE_SIZE - self.image.get_height()),
         )
 
-    def update(self):
+    def update(self, player, world):
         self.rect.x += Constants.screen_scroll
+        if pygame.sprite.collide_rect(self, player):
+            world.stop = True
 
 
 class Diamond(pygame.sprite.Sprite):

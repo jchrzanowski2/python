@@ -30,8 +30,10 @@ player, world, groups = make_world()
 
 start_time = pygame.time.get_ticks()
 
+finish = 120
 
-def show_game_info():
+
+def show_game_info(player):
     elapsed_time = pygame.time.get_ticks() - start_time
     elapsed_text = font.render(
         "Elapsed Time: {} h {} min {} s".format(
@@ -44,8 +46,22 @@ def show_game_info():
     )
     screen.blit(elapsed_text, (10, 10))
 
-    points_text = font.render("Points: {}".format(player.points), True, Constants.BLACK)
+    points_text = font.render(
+        "Points: {}".format(player.points),
+        True,
+        Constants.BLACK
+    )
     screen.blit(points_text, (600, 10))
+
+    health = font.render(
+        "Health: {}".format(
+        player.health
+        ),
+        True,
+        Constants.BLACK
+    )
+    screen.blit(health, (10, 40))
+
 
 
 run = True
@@ -57,16 +73,16 @@ while run:
 
     world.draw(screen, Constants.screen_scroll)
 
-    player.update()
-    player.draw(screen)
+    player.update(player.rect)
+    player.draw(screen, player.rect)
 
     Constants.bullet_group.update(player)
     Constants.bullet_group.draw(screen)
 
     for enemy in Constants.enemy_group:
         enemy.ai(world.obstacle_list, player)
-        enemy.update()
-        enemy.draw(screen)
+        enemy.update(player.rect)
+        enemy.draw(screen, player.rect)
 
     if player.alive:
         if shoot:
@@ -105,9 +121,15 @@ while run:
             if event.key == pygame.K_SPACE:
                 shoot = False
 
-    groups.update_draw(screen, player)
+    world.groups.update_draw(screen, player, world)
+    if world.stop: run = False
+    if not player.alive:
+        if finish:
+            finish -= 1
+        else:
+            run = False
 
-    show_game_info()
+    show_game_info(player)
 
     pygame.display.update()
 

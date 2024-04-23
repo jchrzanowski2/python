@@ -16,6 +16,7 @@ class World:
     def __init__(self) -> None:
         self.obstacle_list = []
         self.groups = SpriteGroups()
+        self.stop = False
 
     def process_data(self, data: tuple[tuple[int]]) -> tuple[Character, SpriteGroups]:
         for y, row in enumerate(data):

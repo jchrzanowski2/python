@@ -53,7 +53,10 @@ class Character(pygame.sprite.Sprite):
         self.idling = False
         self.idling_counter = 0
 
-    def update(self):
+    def update(self, position):
+        if self.char_type == "enemy":
+            if self.rect.x > position.x + 800 or self.rect.x < position.x - 800:
+                return
         self.update_animation()
         self.check_alive()
 
@@ -77,7 +80,7 @@ class Character(pygame.sprite.Sprite):
             self.direction = 1
 
         if self.jump and self.in_air == False:
-            self.vel_y = -11
+            self.vel_y = -20
             self.jump = False
             self.in_air = True
 
@@ -153,6 +156,9 @@ class Character(pygame.sprite.Sprite):
             self.update_time = pygame.time.get_ticks()
 
     def ai(self, obstacle_list, player):
+        if self.char_type == "enemy":
+            if self.rect.x > player.rect.x + 800 or self.rect.x < player.rect.x - 800:
+                return
         if self.alive and player.alive:
             if self.idling == False and random.randint(1, 200) == 1:
                 self.update_action(0)
@@ -197,5 +203,8 @@ class Character(pygame.sprite.Sprite):
             self.alive = False
             self.update_action(3)
 
-    def draw(self, screen: pygame.Surface) -> None:
+    def draw(self, screen: pygame.Surface, position) -> None:
+        if self.char_type == "enemy":
+            if self.rect.x > position.x + 800 or self.rect.x < position.x - 800:
+                return
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
