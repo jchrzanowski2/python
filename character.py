@@ -7,7 +7,7 @@ from bullet import Bullet
 
 class Character(pygame.sprite.Sprite):
     def __init__(
-        self, char_type: str, x: int, y: int, scale: float, speed: float, ammo: int
+        self, char_type: str, x: int, y: int, scale: float, speed: float, ammo: int, health: int = 100
     ) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.alive = True
@@ -16,7 +16,7 @@ class Character(pygame.sprite.Sprite):
         self.frame_index = 0
         self.action = 0
         self.shoot_cooldown = 0
-        self.health = 100
+        self.health = health
         self.max_health = self.health
         self.ammo = ammo
         self.starat_ammo = ammo
@@ -46,17 +46,19 @@ class Character(pygame.sprite.Sprite):
         self.flip = False
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        self.points = 0
         # ai specific variables
-        self.move_counter = 0
-        self.vision = pygame.Rect(0, 0, 150, 20)
-        self.idling = False
-        self.idling_counter = 0
-
-    def update(self, position):
         if self.char_type == "enemy":
-            if self.rect.x > position.x + 800 or self.rect.x < position.x - 800:
-                return
+            self.move_counter = 0
+            self.vision = pygame.Rect(0, 0, 150, 20)
+            self.idling = False
+            self.idling_counter = 0
+        else:
+            self.points = 0
+
+
+    def update(self):
+        if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
+            return
         self.update_animation()
         self.check_alive()
 
@@ -67,8 +69,6 @@ class Character(pygame.sprite.Sprite):
         screen_scroll = 0
         dx = 0
         dy = 0
-
-        screen_scroll = 0
 
         if moving_left:
             dx = -self.speed
@@ -156,10 +156,9 @@ class Character(pygame.sprite.Sprite):
             self.update_time = pygame.time.get_ticks()
 
     def ai(self, obstacle_list, player):
-        if self.char_type == "enemy":
-            if self.rect.x > player.rect.x + 800 or self.rect.x < player.rect.x - 800:
-                return
-        if self.alive and player.alive:
+        if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
+            pass
+        elif self.alive and player.alive:
             if self.idling == False and random.randint(1, 200) == 1:
                 self.update_action(0)
                 self.idling = True
@@ -196,15 +195,18 @@ class Character(pygame.sprite.Sprite):
 
         self.rect.x += Constants.screen_scroll
 
-    def check_alive(self):
+    def check_alive(self) -> bool:
         if self.health <= 0:
             self.health = 0
             self.speed = 0
-            self.alive = False
             self.update_action(3)
+            if self.char_type == "enemy" and self.alive:
+                self.alive = False
+                return True
+            return False
 
-    def draw(self, screen: pygame.Surface, position) -> None:
+    def draw(self, screen: pygame.Surface) -> None:
         if self.char_type == "enemy":
-            if self.rect.x > position.x + 800 or self.rect.x < position.x - 800:
+            if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
                 return
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)

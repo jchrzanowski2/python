@@ -72,17 +72,18 @@ while run:
     draw_bg()
 
     world.draw(screen, Constants.screen_scroll)
+    world.groups.update_draw(screen, player, world)
 
-    player.update(player.rect)
-    player.draw(screen, player.rect)
+    player.update()
+    player.draw(screen)
 
     Constants.bullet_group.update(player)
     Constants.bullet_group.draw(screen)
 
     for enemy in Constants.enemy_group:
         enemy.ai(world.obstacle_list, player)
-        enemy.update(player.rect)
-        enemy.draw(screen, player.rect)
+        enemy.update()
+        enemy.draw(screen)
 
     if player.alive:
         if shoot:
@@ -96,6 +97,7 @@ while run:
         Constants.screen_scroll = player.move(
             moving_left, moving_right, world.obstacle_list
         )
+        Constants.bg_scroll += Constants.screen_scroll
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -121,7 +123,6 @@ while run:
             if event.key == pygame.K_SPACE:
                 shoot = False
 
-    world.groups.update_draw(screen, player, world)
     if world.stop: run = False
     if not player.alive:
         if finish:
