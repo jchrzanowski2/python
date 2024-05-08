@@ -20,7 +20,7 @@ class GameManager:
             self.current_state = EndState(
                 self.current_state.world.stop, 
                 pygame.time.get_ticks() - self.current_state.start_time,
-                self.current_state.player.points
+                self.current_state.player.statistics
                 )
 
 

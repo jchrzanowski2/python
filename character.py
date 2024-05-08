@@ -1,7 +1,7 @@
 import pygame
 import os
 import random
-from constants import Constants, PlayerActions
+from constants import Constants, Statistics
 from bullet import Bullet
 
 
@@ -53,7 +53,7 @@ class Character(pygame.sprite.Sprite):
             self.idling = False
             self.idling_counter = 0
         else:
-            self.points = 0
+            self.statistics = Statistics()
 
 
     def update(self):
@@ -113,6 +113,8 @@ class Character(pygame.sprite.Sprite):
 
         self.rect.x += dx
         self.rect.y += dy
+        if self.char_type == "player":
+            self.statistics.distance_travelled += (dx**2 + dy**2)**(1/2)
 
         # update scroll
         if self.char_type == "player":
@@ -136,6 +138,8 @@ class Character(pygame.sprite.Sprite):
             Constants.bullet_group.add(bullet)
 
             self.ammo -= 1
+            if self.char_type == "player":
+                self.statistics.bullets_shot += 1
 
     def update_animation(self):
         ANIMATION_COOLDOWN = 100
@@ -200,10 +204,7 @@ class Character(pygame.sprite.Sprite):
             self.health = 0
             self.speed = 0
             self.update_action(3)
-            if self.char_type == "enemy" and self.alive:
-                self.alive = False
-                return True
-        return False
+            self.alive = False
 
     def draw(self, screen: pygame.Surface) -> None:
         if self.char_type == "enemy":

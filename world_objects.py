@@ -75,10 +75,10 @@ class Diamond(pygame.sprite.Sprite):
             y + (Constants.TILE_SIZE - self.image.get_height()),
         )
 
-    def update(self, player):
+    def update(self, player) -> None:
         self.rect.x += Constants.screen_scroll
         if pygame.sprite.collide_rect(self, player):
-            player.points += 100
+            player.statistics.points += 100
             self.kill()
 
 

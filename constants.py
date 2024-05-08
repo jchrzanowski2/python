@@ -33,3 +33,9 @@ class PlayerActions:
     moving_left = False
     moving_right = False
     shoot = False
+
+class Statistics:
+    time = 0
+    points = 0
+    bullets_shot = 0
+    distance_travelled = 0

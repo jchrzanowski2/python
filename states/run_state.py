@@ -1,6 +1,6 @@
 from .game_state import GameState
 from world import make_world
-from constants import Constants, PlayerActions
+from constants import Constants, PlayerActions, Statistics
 import pygame
 
 pygame.font.init()
@@ -29,7 +29,7 @@ class RunState(GameState):
             screen.blit(elapsed_text, (10, 10))
 
             points_text = font.render(
-                "Points: {}".format(self.player.points),
+                "Points: {}".format(self.player.statistics.points),
                 True,
                 Constants.BLACK
             )
