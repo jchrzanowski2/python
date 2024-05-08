@@ -203,7 +203,7 @@ class Character(pygame.sprite.Sprite):
             if self.char_type == "enemy" and self.alive:
                 self.alive = False
                 return True
-            return False
+        return False
 
     def draw(self, screen: pygame.Surface) -> None:
         if self.char_type == "enemy":

@@ -124,6 +124,7 @@ while run:
                 shoot = False
 
     if world.stop: run = False
+    if player.rect.y >= 800: player.alive = False
     if not player.alive:
         if finish:
             finish -= 1
