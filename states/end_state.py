@@ -1,21 +1,11 @@
 import pygame
 from .game_state import GameState
 from constants import Constants, Statistics
+from util import make_surface
 
 pygame.font.init()
 font = pygame.font.Font(None, 36)
 
-def make_surface(
-        text: str, 
-        position: tuple[int, int], 
-        *, to_left: bool = False
-) -> tuple[pygame.Surface, pygame.Rect]:
-    text_surface = font.render(text, True, Constants.BLACK)
-    text_rect = text_surface.get_rect()
-    text_rect.center = position
-    if to_left: text_rect.left = position[0]
-
-    return text_surface, text_rect
 
 class EndState(GameState):
     def __init__(self, win: bool, time_played: int, statistics: Statistics) -> None:
@@ -55,8 +45,11 @@ class EndState(GameState):
             make_surface("No. of points: {}".format(self.statistics.points), (150,300), to_left=True)
         )
         self.texts.append(
-            make_surface("Distance travelled: {}m".format(int(self.statistics.distance_travelled/10)), (150,350), to_left=True)
+            make_surface("Distance travelled: {}m".format(int(self.statistics.distance_travelled/10)/5), (150,350), to_left=True)
         )
         self.texts.append(
             make_surface("Bullets shot: {}".format(self.statistics.bullets_shot), (150,400), to_left=True)
+        )
+        self.texts.append(
+            make_surface("Kills: {}".format(self.statistics.kills), (150,450), to_left=True)
         )

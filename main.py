@@ -40,6 +40,8 @@ while run:
     if observer.action:
         observer.act(game)
         game.current_state.attach(observer)
+    
+    observer.pass_info(game)
 
     pygame.display.update()
 

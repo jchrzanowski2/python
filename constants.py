@@ -15,12 +15,20 @@ class Constants:
     BG = (200, 200, 200)  # background colors
     FPS = 60
 
-    WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    WHITE = (255,255,255)
+    GREY = (128,128,128)
+    RED = (255,0,0)
+    GREEN = (0,255,0)
+    BLUE = (0,0,255)
+    ORANGE = (255,128,0)
+    DARK_GREY = (70,70,70)
 
     class Actions:
         GAME_END = 1
+        GAME_START = 2
     
+    KILL = 100
     GRAVITY = 0.75
     SCROLL_THRESH = 200
     screen_scroll = 0
@@ -39,3 +47,4 @@ class Statistics:
     points = 0
     bullets_shot = 0
     distance_travelled = 0
+    kills = 0

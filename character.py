@@ -52,15 +52,17 @@ class Character(pygame.sprite.Sprite):
             self.vision = pygame.Rect(0, 0, 150, 20)
             self.idling = False
             self.idling_counter = 0
+            self.residual_ammo = random.randint(3, 8)
         else:
             self.statistics = Statistics()
 
 
-    def update(self):
+    def update(self) -> bool:
         if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
             return
         self.update_animation()
-        self.check_alive()
+        if self.check_alive() == Constants.KILL:
+            return True
 
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
@@ -110,6 +112,14 @@ class Character(pygame.sprite.Sprite):
                     self.vel_y = 0
                     self.in_air = False
                     dy = tile[1].top - self.rect.bottom - 1
+
+        if self.char_type == "player":
+            for enemy in Constants.enemy_group:
+                if enemy.rect.colliderect(
+                    self.rect.x, self.rect.y, self.width, self.height
+                ) and enemy.residual_ammo > 0 and not enemy.alive:
+                    self.ammo += enemy.residual_ammo
+                    enemy.residual_ammo = 0
 
         self.rect.x += dx
         self.rect.y += dy
@@ -199,12 +209,16 @@ class Character(pygame.sprite.Sprite):
 
         self.rect.x += Constants.screen_scroll
 
-    def check_alive(self) -> bool:
+    def check_alive(self) -> int:
         if self.health <= 0:
             self.health = 0
             self.speed = 0
             self.update_action(3)
-            self.alive = False
+            if self.alive: 
+                self.alive = False
+                return Constants.KILL
+            return 0
+        return 0
 
     def draw(self, screen: pygame.Surface) -> None:
         if self.char_type == "enemy":

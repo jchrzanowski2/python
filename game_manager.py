@@ -4,7 +4,7 @@ import pygame
 
 class GameManager:
     def __init__(self) -> None:
-        self.current_state: GameState = RunState()
+        self.current_state: GameState = MenuState()
     
     def handle_events(self, event: pygame.event.Event) -> None:
         self.current_state.handle_events(event)
@@ -22,5 +22,16 @@ class GameManager:
                 pygame.time.get_ticks() - self.current_state.start_time,
                 self.current_state.player.statistics
                 )
+            return
+        elif action == Constants.Actions.GAME_START:
+            self.current_state = RunState()
+            return
+    
+    def get_info(self, infos: list[int]) -> None:
+        while infos:
+            info = infos.pop()
+            if info == Constants.KILL:
+                self.current_state.player.statistics.points += 200
+                self.current_state.player.statistics.kills += 1
 
 

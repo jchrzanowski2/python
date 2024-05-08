@@ -43,6 +43,14 @@ class RunState(GameState):
                 Constants.BLACK
             )
             screen.blit(health, (10, 40))
+            health = font.render(
+                "Ammo: {}".format(
+                self.player.ammo
+                ),
+                True,
+                Constants.BLACK
+            )
+            screen.blit(health, (10, 70))
         show_game_info()
         self.world.draw(screen, Constants.screen_scroll)
         self.world.groups.update_draw(screen, self.player, self.world)
@@ -54,7 +62,8 @@ class RunState(GameState):
         self.player.update()
         for enemy in Constants.enemy_group:
             enemy.ai(self.world.obstacle_list, self.player)
-            enemy.update()
+            if enemy.update(): self.observer.notify(Constants.KILL)
+                
         def handle_player():
             if self.player.alive:
                 if self.player_actions.shoot:
@@ -73,13 +82,13 @@ class RunState(GameState):
                 Constants.bg_scroll += Constants.screen_scroll
         handle_player()
         if self.world.stop: 
-            self.observer.notify(Constants.Actions.GAME_END)
+            self.observer.alert(Constants.Actions.GAME_END)
         if self.player.rect.y >= 800: self.player.alive = False
         if not self.player.alive:
             if self.finish:
                 self.finish -= 1
             else:
-                self.observer.notify(Constants.Actions.GAME_END)
+                self.observer.alert(Constants.Actions.GAME_END)
         Constants.bullet_group.update(self.player)
     
     def handle_events(self, event: pygame.event.Event) -> None:
@@ -93,7 +102,7 @@ class RunState(GameState):
             if event.key == pygame.K_w and not self.player.in_air and self.player.alive:
                 self.player.jump = True
             if event.key == pygame.K_ESCAPE:
-                self.observer.notify(Constants.Actions.GAME_END)
+                self.observer.alert(Constants.Actions.GAME_END)
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_a:
