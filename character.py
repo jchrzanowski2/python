@@ -1,7 +1,7 @@
 import pygame
 import os
 import random
-from constants import Constants
+from constants import Constants, PlayerActions
 from bullet import Bullet
 
 
@@ -65,7 +65,7 @@ class Character(pygame.sprite.Sprite):
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
 
-    def move(self, moving_left: bool, moving_right: bool, obstacle_list: list) -> None:
+    def move(self, moving_left, moving_right, obstacle_list: list) -> None:
         screen_scroll = 0
         dx = 0
         dy = 0

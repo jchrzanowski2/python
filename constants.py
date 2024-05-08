@@ -18,6 +18,9 @@ class Constants:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
 
+    class Actions:
+        GAME_END = 1
+    
     GRAVITY = 0.75
     SCROLL_THRESH = 200
     screen_scroll = 0
@@ -25,3 +28,8 @@ class Constants:
 
     enemy_group = pygame.sprite.Group()
     bullet_group = pygame.sprite.Group()
+
+class PlayerActions:
+    moving_left = False
+    moving_right = False
+    shoot = False
