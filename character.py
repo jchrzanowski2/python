@@ -1,13 +1,20 @@
 import pygame
 import os
 import random
-from constants import Constants, Statistics
+from constants import Constants, Statistics, SoundEffect
 from bullet import Bullet
 
 
 class Character(pygame.sprite.Sprite):
     def __init__(
-        self, char_type: str, x: int, y: int, scale: float, speed: float, ammo: int, health: int = 100
+        self,
+        char_type: str,
+        x: int,
+        y: int,
+        scale: float,
+        speed: float,
+        ammo: int,
+        health: int = 100,
     ) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.alive = True
@@ -46,6 +53,7 @@ class Character(pygame.sprite.Sprite):
         self.flip = False
         self.width = self.image.get_width()
         self.height = self.image.get_height()
+        self.sound = SoundEffect()
         # ai specific variables
         if self.char_type == "enemy":
             self.move_counter = 0
@@ -55,7 +63,6 @@ class Character(pygame.sprite.Sprite):
             self.residual_ammo = random.randint(3, 8)
         else:
             self.statistics = Statistics()
-
 
     def update(self) -> bool:
         if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
@@ -115,16 +122,20 @@ class Character(pygame.sprite.Sprite):
 
         if self.char_type == "player":
             for enemy in Constants.enemy_group:
-                if enemy.rect.colliderect(
-                    self.rect.x, self.rect.y, self.width, self.height
-                ) and enemy.residual_ammo > 0 and not enemy.alive:
+                if (
+                    enemy.rect.colliderect(
+                        self.rect.x, self.rect.y, self.width, self.height
+                    )
+                    and enemy.residual_ammo > 0
+                    and not enemy.alive
+                ):
                     self.ammo += enemy.residual_ammo
                     enemy.residual_ammo = 0
 
         self.rect.x += dx
         self.rect.y += dy
         if self.char_type == "player":
-            self.statistics.distance_travelled += (dx**2 + dy**2)**(1/2)
+            self.statistics.distance_travelled += (dx**2 + dy**2) ** (1 / 2)
 
         # update scroll
         if self.char_type == "player":
@@ -146,6 +157,7 @@ class Character(pygame.sprite.Sprite):
                 self.direction,
             )
             Constants.bullet_group.add(bullet)
+            self.sound.shot_fx.play()
 
             self.ammo -= 1
             if self.char_type == "player":
@@ -214,7 +226,7 @@ class Character(pygame.sprite.Sprite):
             self.health = 0
             self.speed = 0
             self.update_action(3)
-            if self.alive: 
+            if self.alive:
                 self.alive = False
                 return Constants.KILL
             return 0

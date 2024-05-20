@@ -1,4 +1,5 @@
 import pygame
+from pygame import mixer
 
 
 # Struct with all constants for easy editing
@@ -16,18 +17,18 @@ class Constants:
     FPS = 60
 
     BLACK = (0, 0, 0)
-    WHITE = (255,255,255)
-    GREY = (128,128,128)
-    RED = (255,0,0)
-    GREEN = (0,255,0)
-    BLUE = (0,0,255)
-    ORANGE = (255,128,0)
-    DARK_GREY = (70,70,70)
+    WHITE = (255, 255, 255)
+    GREY = (128, 128, 128)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    ORANGE = (255, 128, 0)
+    DARK_GREY = (70, 70, 70)
 
     class Actions:
         GAME_END = 1
         GAME_START = 2
-    
+
     KILL = 100
     GRAVITY = 0.75
     SCROLL_THRESH = 200
@@ -37,10 +38,12 @@ class Constants:
     enemy_group = pygame.sprite.Group()
     bullet_group = pygame.sprite.Group()
 
+
 class PlayerActions:
     moving_left = False
     moving_right = False
     shoot = False
+
 
 class Statistics:
     time = 0
@@ -48,3 +51,11 @@ class Statistics:
     bullets_shot = 0
     distance_travelled = 0
     kills = 0
+
+
+class SoundEffect:
+    mixer.init()
+    jump_fx = pygame.mixer.Sound("audio/jump.wav")
+    jump_fx.set_volume(0.2)
+    shot_fx = pygame.mixer.Sound("audio/shot.wav")
+    shot_fx.set_volume(0.2)

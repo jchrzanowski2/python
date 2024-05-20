@@ -51,7 +51,7 @@ class World:
                             2,
                             5,
                             20,
-                            health=200
+                            health=200,
                         )
                     elif tile == 16:  # enemy
                         enemy = Character(

@@ -1,6 +1,7 @@
 import pygame
 from observer import Observer
 
+
 class GameState:
     def __init__(self) -> None:
         self.observer = None

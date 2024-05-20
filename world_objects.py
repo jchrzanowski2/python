@@ -9,7 +9,9 @@ class SpriteGroups:
         self.exit_group = pygame.sprite.Group()
         self.diamond_group = pygame.sprite.Group()
 
-    def update_draw(self, screen: pygame.Surface, player: "Player", world) -> None | int:
+    def update_draw(
+        self, screen: pygame.Surface, player: "Player", world
+    ) -> None | int:
         self.decoration_group.update()
         self.water_group.update()
         self.exit_group.update(player, world)

@@ -1,10 +1,11 @@
 from .game_state import GameState
 from world import make_world
-from constants import Constants, PlayerActions, Statistics
+from constants import Constants, PlayerActions, Statistics, SoundEffect
 import pygame
 
 pygame.font.init()
 font = pygame.font.Font(None, 36)
+
 
 class RunState(GameState):
     def __init__(self) -> None:
@@ -13,6 +14,7 @@ class RunState(GameState):
         self.start_time = pygame.time.get_ticks()
         self.player_actions = PlayerActions()
         self.finish = 120
+        self.sound = SoundEffect()
 
     def draw(self, screen: pygame.Surface) -> None:
         def show_game_info():
@@ -31,66 +33,65 @@ class RunState(GameState):
             points_text = font.render(
                 "Points: {}".format(self.player.statistics.points),
                 True,
-                Constants.BLACK
+                Constants.BLACK,
             )
             screen.blit(points_text, (600, 10))
 
             health = font.render(
-                "Health: {}".format(
-                self.player.health
-                ),
-                True,
-                Constants.BLACK
+                "Health: {}".format(self.player.health), True, Constants.BLACK
             )
             screen.blit(health, (10, 40))
             health = font.render(
-                "Ammo: {}".format(
-                self.player.ammo
-                ),
-                True,
-                Constants.BLACK
+                "Ammo: {}".format(self.player.ammo), True, Constants.BLACK
             )
             screen.blit(health, (10, 70))
+
         show_game_info()
         self.world.draw(screen, Constants.screen_scroll)
         self.world.groups.update_draw(screen, self.player, self.world)
         self.player.draw(screen)
         Constants.bullet_group.draw(screen)
-        for enemy in Constants.enemy_group: enemy.draw(screen)
-    
+        for enemy in Constants.enemy_group:
+            enemy.draw(screen)
+
     def update(self) -> None:
         self.player.update()
         for enemy in Constants.enemy_group:
             enemy.ai(self.world.obstacle_list, self.player)
-            if enemy.update(): self.observer.notify(Constants.KILL)
-                
+            if enemy.update():
+                self.observer.notify(Constants.KILL)
+
         def handle_player():
             if self.player.alive:
                 if self.player_actions.shoot:
                     self.player.shoot()
                 if self.player.in_air:
                     self.player.update_action(2)
-                elif self.player_actions.moving_left or self.player_actions.moving_right:
+                elif (
+                    self.player_actions.moving_left or self.player_actions.moving_right
+                ):
                     self.player.update_action(1)
                 else:
                     self.player.update_action(0)
                 Constants.screen_scroll = self.player.move(
                     self.player_actions.moving_left,
                     self.player_actions.moving_right,
-                    self.world.obstacle_list
+                    self.world.obstacle_list,
                 )
                 Constants.bg_scroll += Constants.screen_scroll
+
         handle_player()
-        if self.world.stop: 
+        if self.world.stop:
             self.observer.alert(Constants.Actions.GAME_END)
-        if self.player.rect.y >= 800: self.player.alive = False
+        if self.player.rect.y >= 800:
+            self.player.alive = False
         if not self.player.alive:
             if self.finish:
                 self.finish -= 1
             else:
                 self.observer.alert(Constants.Actions.GAME_END)
         Constants.bullet_group.update(self.player)
-    
+
     def handle_events(self, event: pygame.event.Event) -> None:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
@@ -101,6 +102,7 @@ class RunState(GameState):
                 self.player_actions.shoot = True
             if event.key == pygame.K_w and not self.player.in_air and self.player.alive:
                 self.player.jump = True
+                self.sound.jump_fx.play()
             if event.key == pygame.K_ESCAPE:
                 self.observer.alert(Constants.Actions.GAME_END)
 
@@ -111,6 +113,3 @@ class RunState(GameState):
                 self.player_actions.moving_right = False
             if event.key == pygame.K_SPACE:
                 self.player_actions.shoot = False
-    
-    
-    

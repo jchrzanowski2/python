@@ -2,8 +2,14 @@ import pygame
 from constants import Constants
 from game_manager import GameManager
 from observer import Observer
+from pygame import mixer
 
 pygame.init()
+
+mixer.init()
+pygame.mixer.music.load("audio/music.mp3")
+pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.play(-1, 0.0, 3000)
 
 SCREEN_WIDTH = Constants.SCREEN_WIDTH
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
@@ -13,9 +19,11 @@ pygame.display.set_caption("Game")
 
 clock = pygame.time.Clock()
 
+
 # colors
 def draw_bg() -> None:
     screen.fill(Constants.BG)
+
 
 game = GameManager()
 observer = Observer()
@@ -40,7 +48,7 @@ while run:
     if observer.action:
         observer.act(game)
         game.current_state.attach(observer)
-    
+
     observer.pass_info(game)
 
     pygame.display.update()
