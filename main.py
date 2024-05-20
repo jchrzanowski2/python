@@ -1,26 +1,33 @@
 import pygame
 from constants import Constants
-from world import World, make_world
-from world_objects import SpriteGroups
+from game_manager import GameManager
+from observer import Observer
+from pygame import mixer
 
 pygame.init()
+
+mixer.init()
+pygame.mixer.music.load("audio/music.mp3")
+pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.play(-1, 0.0, 3000)
 
 SCREEN_WIDTH = Constants.SCREEN_WIDTH
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
 
-screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-pygame.display.set_caption('Game')
-
-moving_left = False
-moving_right = False
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Game")
 
 clock = pygame.time.Clock()
 
-#colors
+
+# colors
 def draw_bg() -> None:
     screen.fill(Constants.BG)
 
-player, world, groups = make_world()
+
+game = GameManager()
+observer = Observer()
+game.current_state.attach(observer)
 
 run = True
 while run:
@@ -29,35 +36,21 @@ while run:
 
     draw_bg()
 
-    world.draw(screen, Constants.screen_scroll)
-
-    player.draw(screen)
-
-    Constants.screen_scroll = player.move(moving_left, moving_right, world.obstacle_list)
+    game.update()
+    game.draw(screen)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        else:
+            game.handle_events(event)
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                moving_left = True
-            if event.key == pygame.K_d:
-                moving_right = True
-            if event.key == pygame.K_w and not player.in_air:
-                player.jump = True
-            if event.key == pygame.K_ESCAPE:
-                run = False
+    if observer.action:
+        observer.act(game)
+        game.current_state.attach(observer)
 
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_a:
-                moving_left = False
-            if event.key == pygame.K_d:
-                moving_right = False
-
-    groups.update_draw(screen)
+    observer.pass_info(game)
 
     pygame.display.update()
 
-
-pygame.quit()   
+pygame.quit()
