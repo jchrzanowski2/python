@@ -12,7 +12,7 @@ class MenuState(GameState):
         self.buttons.append(
             Button(
                 "Start game",
-                150,
+                320,
                 400,
                 lambda: self.observer.alert(Constants.Actions.GAME_START),
             )
