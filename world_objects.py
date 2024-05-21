@@ -64,7 +64,10 @@ class Exit(pygame.sprite.Sprite):
     def update(self, player, world):
         self.rect.x += Constants.screen_scroll
         if pygame.sprite.collide_rect(self, player):
-            world.stop = True
+            if world.map_no == Constants.LEVEL_NUM:
+                world.stop = True
+            else:
+                world.map_no += 1
 
 
 class Diamond(pygame.sprite.Sprite):

@@ -34,9 +34,12 @@ class Constants:
     SCROLL_THRESH = 200
     screen_scroll = 0
     bg_scroll = 0
-
+    LEVEL_NUM = 2
+    
     enemy_group = pygame.sprite.Group()
     bullet_group = pygame.sprite.Group()
+
+    high_score_file = 'high_score.json'
 
 
 class PlayerActions:
@@ -51,6 +54,7 @@ class Statistics:
     bullets_shot = 0
     distance_travelled = 0
     kills = 0
+    total_points = 0
 
 
 class SoundEffect:

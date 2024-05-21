@@ -13,10 +13,11 @@ for x in range(Constants.TILE_TYPES):
 
 
 class World:
-    def __init__(self) -> None:
+    def __init__(self, map_no: int) -> None:
         self.obstacle_list = []
         self.groups = SpriteGroups()
         self.stop = False
+        self.map_no = map_no
 
     def process_data(self, data: tuple[tuple[int]]) -> tuple[Character, SpriteGroups]:
         for y, row in enumerate(data):
@@ -82,19 +83,19 @@ class World:
             screen.blit(tile[0], tile[1])
 
 
-def make_world() -> tuple[Character, World, SpriteGroups]:
+def make_world(map_no: int) -> tuple[Character, World, SpriteGroups]:
     world_data = []
     for row in range(Constants.ROWS):
         r = [-1] * Constants.COLS
         world_data.append(r)
 
-    with open(f"level1_data.csv", newline="") as csvfile:
+    with open(f"level{map_no}_data.csv", newline="") as csvfile:
         reader = csv.reader(csvfile, delimiter=",")
         for x, row in enumerate(reader):
             for y, tile in enumerate(row):
                 world_data[x][y] = int(tile)
 
-    world = World()
+    world = World(map_no)
     player, groups = world.process_data(world_data)
 
     return player, world, groups

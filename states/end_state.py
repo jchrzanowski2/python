@@ -2,6 +2,8 @@ import pygame
 from .game_state import GameState
 from constants import Constants, Statistics
 from util import make_surface
+import json
+
 
 pygame.font.init()
 font = pygame.font.Font(None, 36)
@@ -14,7 +16,16 @@ class EndState(GameState):
         self.time = time_played
         self.texts: list[tuple[pygame.Surface, pygame.Rect]] = []
         self.statistics = statistics
+        points_for_winning = 2000 if self.won == "won" else 0
+        self.statistics.total_points = self.statistics.distance_travelled//10 + self.statistics.points - self.statistics.time//100 + self.statistics.bullets_shot * 10 + points_for_winning
+        high_score = load_high_score()
+        self.better_score = 0
+        if self.statistics.total_points > high_score:
+            self.better_score = 1
+            save_high_score(self.statistics.total_points)
+
         self.add_texts()
+
 
     def draw(self, screen: pygame.Surface) -> None:
         for surface, rect in self.texts:
@@ -70,3 +81,29 @@ class EndState(GameState):
                 "Kills: {}".format(self.statistics.kills), (150, 450), to_left=True
             )
         )
+        self.texts.append(
+            make_surface(
+                "Total points: {}".format(self.statistics.total_points),
+                (150, 500),
+                to_left=True
+            )
+        )
+        beaten = "beaten" if self.better_score else "not beaten"
+        self.texts.append(
+            make_surface(
+                "You have {} the high score".format(beaten) + ("!" * self.better_score * 3),
+                (400, 550)
+            )
+        )
+
+def save_high_score(score: int) -> None:
+    with open(Constants.high_score_file, 'w') as file:
+        json.dump({'high_score': score}, file)
+
+def load_high_score():
+    try:
+        with open(Constants.high_score_file, 'r') as file:
+            data = json.load(file)
+            return data.get('high_score', 0)
+    except FileNotFoundError:
+        return 0

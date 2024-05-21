@@ -8,10 +8,12 @@ font = pygame.font.Font(None, 36)
 
 
 class RunState(GameState):
-    def __init__(self) -> None:
+    def __init__(self, start_time=None, player=None) -> None:
         super().__init__()
-        self.player, self.world, self.groups = make_world()
+        self.player, self.world, self.groups = make_world(1)
+        self.map_no = 1
         self.start_time = pygame.time.get_ticks()
+
         self.player_actions = PlayerActions()
         self.finish = 120
         self.sound = SoundEffect()
@@ -81,6 +83,11 @@ class RunState(GameState):
                 Constants.bg_scroll += Constants.screen_scroll
 
         handle_player()
+        if self.world.map_no > Constants.LEVEL_NUM:
+            self.world.stop = True
+        if self.world.map_no > self.map_no:
+            _, self.world, self.groups = make_world(2)
+            self.map_no += 1
         if self.world.stop:
             self.observer.alert(Constants.Actions.GAME_END)
         if self.player.rect.y >= 800:

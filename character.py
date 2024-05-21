@@ -89,12 +89,13 @@ class Character(pygame.sprite.Sprite):
             self.direction = 1
 
         if self.jump and self.in_air == False:
-            self.vel_y = -20
+            self.vel_y = -15
             self.jump = False
             self.in_air = True
 
         self.vel_y += Constants.GRAVITY
         if self.vel_y > 10:
+            self.vel_y = 10
             self.vel_y = 10
         dy += self.vel_y
 
