@@ -8,7 +8,7 @@ font = pygame.font.Font(None, 36)
 
 
 class RunState(GameState):
-    def __init__(self, start_time=None, player=None) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self.player, self.world, self.groups = make_world(1)
         self.map_no = 1
@@ -63,7 +63,7 @@ class RunState(GameState):
             if enemy.update():
                 self.observer.notify(Constants.KILL)
 
-        def handle_player():
+        def handle_player() -> None:
             if self.player.alive:
                 if self.player_actions.shoot:
                     self.player.shoot()

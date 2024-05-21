@@ -3,7 +3,7 @@ from constants import Constants
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction):
+    def __init__(self, x: int, y: int, direction: int) -> int:
         pygame.sprite.Sprite.__init__(self)
         self.speed = 10
         self.image = pygame.image.load("img/icons/bullet.png").convert_alpha()
@@ -11,7 +11,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         self.direction = direction
 
-    def update(self, player):
+    def update(self, player) -> None:
         self.rect.x += self.direction * self.speed
 
         if self.rect.right < 0 or self.rect.left > Constants.SCREEN_WIDTH:

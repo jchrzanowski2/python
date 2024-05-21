@@ -3,6 +3,7 @@ import os
 import random
 from constants import Constants, Statistics, SoundEffect
 from bullet import Bullet
+from typing import List
 
 
 class Character(pygame.sprite.Sprite):
@@ -149,7 +150,7 @@ class Character(pygame.sprite.Sprite):
 
         return screen_scroll
 
-    def shoot(self):
+    def shoot(self) -> None:
         if self.shoot_cooldown == 0 and self.ammo > 0:
             self.shoot_cooldown = 20
             bullet = Bullet(
@@ -164,7 +165,7 @@ class Character(pygame.sprite.Sprite):
             if self.char_type == "player":
                 self.statistics.bullets_shot += 1
 
-    def update_animation(self):
+    def update_animation(self) -> None:
         ANIMATION_COOLDOWN = 100
         self.image = self.animation_list[self.action][self.frame_index]
         if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
@@ -176,13 +177,13 @@ class Character(pygame.sprite.Sprite):
             else:
                 self.frame_index = 0
 
-    def update_action(self, new_action):
+    def update_action(self, new_action: int) -> None:
         if new_action != self.action:
             self.action = new_action
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
 
-    def ai(self, obstacle_list, player):
+    def ai(self, obstacle_list: List[int], player) -> None:
         if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
             pass
         elif self.alive and player.alive:

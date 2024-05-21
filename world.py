@@ -2,6 +2,7 @@ from constants import Constants
 from character import Character
 import pygame
 import csv
+from typing import List
 from world_objects import Decorations, Water, Exit, SpriteGroups, Diamond
 
 img_list = []
@@ -19,7 +20,7 @@ class World:
         self.stop = False
         self.map_no = map_no
 
-    def process_data(self, data: tuple[tuple[int]]) -> tuple[Character, SpriteGroups]:
+    def process_data(self, data: List[List[int]]) -> tuple[Character, SpriteGroups]:
         for y, row in enumerate(data):
             for x, tile in enumerate(row):
                 if tile >= 0:

@@ -1,5 +1,6 @@
 import pygame
 from constants import Constants
+from character import Character
 
 
 class SpriteGroups:
@@ -61,7 +62,7 @@ class Exit(pygame.sprite.Sprite):
             y + (Constants.TILE_SIZE - self.image.get_height()),
         )
 
-    def update(self, player, world):
+    def update(self, player: Character, world: "World"):
         self.rect.x += Constants.screen_scroll
         if pygame.sprite.collide_rect(self, player):
             if world.map_no == Constants.LEVEL_NUM:
@@ -80,7 +81,7 @@ class Diamond(pygame.sprite.Sprite):
             y + (Constants.TILE_SIZE - self.image.get_height()),
         )
 
-    def update(self, player) -> None:
+    def update(self, player: Character) -> None:
         self.rect.x += Constants.screen_scroll
         if pygame.sprite.collide_rect(self, player):
             player.statistics.points += 100

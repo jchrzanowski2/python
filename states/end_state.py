@@ -17,7 +17,7 @@ class EndState(GameState):
         self.texts: list[tuple[pygame.Surface, pygame.Rect]] = []
         self.statistics = statistics
         points_for_winning = 2000 if self.won == "won" else 0
-        self.statistics.total_points = self.statistics.distance_travelled//10 + self.statistics.points - self.statistics.time//100 + self.statistics.bullets_shot * 10 + points_for_winning
+        self.statistics.total_points = int(int(self.statistics.distance_travelled/5)/5 + self.statistics.points - self.statistics.time//100 + self.statistics.bullets_shot * 10 + points_for_winning)
         high_score = load_high_score()
         self.better_score = 0
         if self.statistics.total_points > high_score:
@@ -100,7 +100,7 @@ def save_high_score(score: int) -> None:
     with open(Constants.high_score_file, 'w') as file:
         json.dump({'high_score': score}, file)
 
-def load_high_score():
+def load_high_score() -> int:
     try:
         with open(Constants.high_score_file, 'r') as file:
             data = json.load(file)

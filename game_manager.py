@@ -1,6 +1,7 @@
 from constants import Constants
 from states import *
 import pygame
+from typing import List
 
 
 class GameManager:
@@ -28,7 +29,7 @@ class GameManager:
             self.current_state = RunState()
             return
 
-    def get_info(self, infos: list[int]) -> None:
+    def get_info(self, infos: List[int]) -> None:
         while infos:
             info = infos.pop()
             if info == Constants.KILL:
