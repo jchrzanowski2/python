@@ -4,6 +4,8 @@ from pygame import mixer
 
 # Struct with all constants for easy editing
 class Constants:
+    """Class containing various constants used in the game."""
+
     SCREEN_WIDTH = 800
     SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
 
@@ -26,6 +28,7 @@ class Constants:
     DARK_GREY = (70, 70, 70)
 
     class Actions:
+        """Class containing game action constants."""
         GAME_END = 1
         GAME_START = 2
 
@@ -43,12 +46,14 @@ class Constants:
 
 
 class PlayerActions:
+    """Class containing player action flags."""
     moving_left = False
     moving_right = False
     shoot = False
 
 
 class Statistics:
+    """Class containing player statistics."""
     time = 0
     points = 0
     bullets_shot = 0
@@ -58,6 +63,7 @@ class Statistics:
 
 
 class SoundEffect:
+    """Class containing sound effects for the game."""
     mixer.init()
     jump_fx = pygame.mixer.Sound("audio/jump.wav")
     jump_fx.set_volume(0.2)

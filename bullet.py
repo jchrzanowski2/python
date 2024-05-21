@@ -3,7 +3,17 @@ from constants import Constants
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, direction: int) -> int:
+    """Class representing a bullet in the game."""
+
+    def __init__(self, x: int, y: int, direction: int) -> None:
+        """
+        Initialize a Bullet object.
+
+        Args:
+            x (int): The x-coordinate of the bullet.
+            y (int): The y-coordinate of the bullet.
+            direction (int): The direction in which the bullet will move.
+        """
         pygame.sprite.Sprite.__init__(self)
         self.speed = 10
         self.image = pygame.image.load("img/icons/bullet.png").convert_alpha()
@@ -12,6 +22,12 @@ class Bullet(pygame.sprite.Sprite):
         self.direction = direction
 
     def update(self, player) -> None:
+        """
+        Update the position of the bullet.
+
+        Args:
+            player: The player character to check for collisions.
+        """
         self.rect.x += self.direction * self.speed
 
         if self.rect.right < 0 or self.rect.left > Constants.SCREEN_WIDTH:

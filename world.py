@@ -7,6 +7,7 @@ from world_objects import Decorations, Water, Exit, SpriteGroups, Diamond
 
 img_list = []
 
+# Load images for tiles
 for x in range(Constants.TILE_TYPES):
     img = pygame.image.load(f"img/tile/{x}.png")
     img = pygame.transform.scale(img, (Constants.TILE_SIZE, Constants.TILE_SIZE))
@@ -14,13 +15,30 @@ for x in range(Constants.TILE_TYPES):
 
 
 class World:
+    """Class representing the game world."""
+
     def __init__(self, map_no: int) -> None:
+        """
+        Initialize the World object.
+
+        Args:
+            map_no (int): The number of the map to load.
+        """
         self.obstacle_list = []
         self.groups = SpriteGroups()
         self.stop = False
         self.map_no = map_no
 
     def process_data(self, data: List[List[int]]) -> tuple[Character, SpriteGroups]:
+        """
+        Process map data to create game objects.
+
+        Args:
+            data (List[List[int]]): 2D list representing the map layout.
+
+        Returns:
+            tuple[Character, SpriteGroups]: A tuple containing the player Character object and SpriteGroups object.
+        """
         for y, row in enumerate(data):
             for x, tile in enumerate(row):
                 if tile >= 0:
@@ -79,12 +97,28 @@ class World:
         return player, self.groups
 
     def draw(self, screen: pygame.Surface, screen_scroll: int) -> None:
+        """
+        Draw the world on the screen.
+
+        Args:
+            screen (pygame.Surface): The surface to draw on.
+            screen_scroll (int): The amount to scroll the screen.
+        """
         for tile in self.obstacle_list:
             tile[1][0] += screen_scroll
             screen.blit(tile[0], tile[1])
 
 
 def make_world(map_no: int) -> tuple[Character, World, SpriteGroups]:
+    """
+    Create a new game world.
+
+    Args:
+        map_no (int): The number of the map to load.
+
+    Returns:
+        tuple[Character, World, SpriteGroups]: A tuple containing the player Character object, World object, and SpriteGroups object.
+    """
     world_data = []
     for row in range(Constants.ROWS):
         r = [-1] * Constants.COLS

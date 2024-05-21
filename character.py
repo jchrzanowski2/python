@@ -7,6 +7,8 @@ from typing import List
 
 
 class Character(pygame.sprite.Sprite):
+    """Class representing a character in the game."""
+
     def __init__(
         self,
         char_type: str,
@@ -17,6 +19,18 @@ class Character(pygame.sprite.Sprite):
         ammo: int,
         health: int = 100,
     ) -> None:
+        """
+        Initialize a Character object.
+
+        Args:
+            char_type (str): The type of character.
+            x (int): The x-coordinate of the character.
+            y (int): The y-coordinate of the character.
+            scale (float): The scale factor for the character's images.
+            speed (float): The speed of the character.
+            ammo (int): The initial ammo count of the character.
+            health (int, optional): The initial health of the character. Defaults to 100.
+        """
         pygame.sprite.Sprite.__init__(self)
         self.alive = True
         self.char_type = char_type
@@ -66,6 +80,12 @@ class Character(pygame.sprite.Sprite):
             self.statistics = Statistics()
 
     def update(self) -> bool:
+        """
+        Update the character's state.
+
+        Returns:
+            bool: True if the character is killed, False otherwise.
+        """
         if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
             return
         self.update_animation()
@@ -76,6 +96,14 @@ class Character(pygame.sprite.Sprite):
             self.shoot_cooldown -= 1
 
     def move(self, moving_left, moving_right, obstacle_list: list) -> None:
+        """
+        Move the character.
+
+        Args:
+            moving_left (bool): Indicates if the character is moving left.
+            moving_right (bool): Indicates if the character is moving right.
+            obstacle_list (list): List of obstacles to consider for collision detection.
+        """
         screen_scroll = 0
         dx = 0
         dy = 0
@@ -151,6 +179,7 @@ class Character(pygame.sprite.Sprite):
         return screen_scroll
 
     def shoot(self) -> None:
+        """Make the character shoot."""
         if self.shoot_cooldown == 0 and self.ammo > 0:
             self.shoot_cooldown = 20
             bullet = Bullet(
@@ -166,6 +195,7 @@ class Character(pygame.sprite.Sprite):
                 self.statistics.bullets_shot += 1
 
     def update_animation(self) -> None:
+        """Update the character's animation."""
         ANIMATION_COOLDOWN = 100
         self.image = self.animation_list[self.action][self.frame_index]
         if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
@@ -178,12 +208,25 @@ class Character(pygame.sprite.Sprite):
                 self.frame_index = 0
 
     def update_action(self, new_action: int) -> None:
+        """
+        Update the character's action.
+
+        Args:
+            new_action (int): The new action to be performed by the character.
+        """
         if new_action != self.action:
             self.action = new_action
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
 
     def ai(self, obstacle_list: List[int], player) -> None:
+        """
+        Implement the AI behavior for the character.
+
+        Args:
+            obstacle_list (List[int]): List of obstacles to consider for collision detection.
+            player: The player character to interact with.
+        """
         if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
             pass
         elif self.alive and player.alive:
@@ -224,6 +267,12 @@ class Character(pygame.sprite.Sprite):
         self.rect.x += Constants.screen_scroll
 
     def check_alive(self) -> int:
+        """
+        Check if the character is alive.
+
+        Returns:
+            int: The kill constant if the character is dead, 0 otherwise.
+        """
         if self.health <= 0:
             self.health = 0
             self.speed = 0
@@ -235,6 +284,12 @@ class Character(pygame.sprite.Sprite):
         return 0
 
     def draw(self, screen: pygame.Surface) -> None:
+        """
+        Draw the character on the screen.
+
+        Args:
+            screen (pygame.Surface): The surface to draw the character on.
+        """
         if self.char_type == "enemy":
             if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
                 return
