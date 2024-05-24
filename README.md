@@ -12,9 +12,8 @@ This is a game project built using Python and Pygame library. The game consists 
     pip install pygame
     ```
 
-3. **Other Requirements**: Some images and audio files are required for the game. Make sure to place them in the appropriate directories:
-
-audio files: package audio
+3. **Other Requirements**: Some images and audio files are required for the game. Make sure to place them in the appropriate directories: \
+audio files: package audio \
 img files: package img
 
 ## Usage
