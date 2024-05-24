@@ -4,6 +4,7 @@ import pygame
 import csv
 from typing import List
 from world_objects import Decorations, Water, Exit, SpriteGroups, Diamond
+from random import randint
 
 img_list = []
 
@@ -24,7 +25,7 @@ class World:
         Args:
             map_no (int): The number of the map to load.
         """
-        self.obstacle_list = []
+        self.obstacle_list: List[tuple[pygame.Surface, pygame.Rect]] = []
         self.groups = SpriteGroups()
         self.stop = False
         self.map_no = map_no
@@ -42,7 +43,7 @@ class World:
         for y, row in enumerate(data):
             for x, tile in enumerate(row):
                 if tile >= 0:
-                    img = img_list[tile]
+                    img: pygame.Surface = img_list[tile]
                     img_rect = img.get_rect()
                     img_rect.x = x * Constants.TILE_SIZE
                     img_rect.y = y * Constants.TILE_SIZE
@@ -81,6 +82,7 @@ class World:
                             2,
                             2,
                             20,
+                            health=100 + randint(0,5)*20
                         )
                         Constants.enemy_group.add(enemy)
                     elif tile == 20:

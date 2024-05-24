@@ -57,7 +57,7 @@ class Character(pygame.sprite.Sprite):
                 temp_list.append(img)
             self.animation_list.append(temp_list)
 
-        self.image = self.animation_list[self.action][self.frame_index]
+        self.image: pygame.Surface = self.animation_list[self.action][self.frame_index]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.speed = speed
@@ -79,12 +79,12 @@ class Character(pygame.sprite.Sprite):
         else:
             self.statistics = Statistics()
 
-    def update(self) -> bool:
+    def update(self) -> bool | None:
         """
         Update the character's state.
 
         Returns:
-            bool: True if the character is killed, False otherwise.
+            bool: True if the character is killed, None otherwise.
         """
         if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
             return
@@ -95,7 +95,7 @@ class Character(pygame.sprite.Sprite):
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
 
-    def move(self, moving_left, moving_right, obstacle_list: list) -> None:
+    def move(self, moving_left, moving_right, obstacle_list: List[pygame.Surface]) -> None:
         """
         Move the character.
 

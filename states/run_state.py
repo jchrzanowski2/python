@@ -81,6 +81,14 @@ class RunState(GameState):
                     self.world.obstacle_list,
                 )
                 Constants.bg_scroll += Constants.screen_scroll
+            else:
+                self.player_actions.moving_left = False
+                self.player_actions.moving_right = False
+                Constants.screen_scroll = self.player.move(
+                    self.player_actions.moving_left,
+                    self.player_actions.moving_right,
+                    self.world.obstacle_list,
+                )
 
         handle_player()
         if self.world.map_no > Constants.LEVEL_NUM:
