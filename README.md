@@ -12,9 +12,9 @@ This is a game project built using Python and Pygame library. The game consists 
     pip install pygame
     ```
 
-3. **Other Requirements**: Some images and audio files are required for the game. Make sure to place them in the appropriate directories: \
-audio files: package audio \
-img files: package img
+3. **Other Requirements**: Some images and audio files are required for the game. Make sure to place them in the appropriate directories: 
+- audio files: package audio 
+- img files: package img
 
 ## Usage
 
@@ -34,9 +34,10 @@ python main.py
 ### Gameplay
 
 - Navigate through different levels by reaching the exit.
-- Avoid obstacles and enemies.
+- Avoid obstacles and enemies - colliding with them hurts you!
 - Collect diamonds for points.
 - Shoot enemies to eliminate them.
+- **Enemy types:** enemies with a red skull shoot faster and have more health points. Purple ones are even more deadly! However, killing them may reward you with more points and HP.
 
 To win enter the last exit (currently two maps)
 
