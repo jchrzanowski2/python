@@ -60,8 +60,8 @@ class RunState(GameState):
         self.player.update()
         for enemy in Constants.enemy_group:
             enemy.ai(self.world.obstacle_list, self.player)
-            if enemy.update():
-                self.observer.notify(Constants.KILL)
+            killed = enemy.update()
+            if killed: self.observer.notify(killed)
 
         def handle_player() -> None:
             if self.player.alive:

@@ -5,6 +5,9 @@ from constants import Constants, Statistics, SoundEffect
 from bullet import Bullet
 from typing import List
 
+pygame.font.init()
+font = pygame.font.SysFont(None, 20)
+
 
 class Character(pygame.sprite.Sprite):
     """Class representing a character in the game."""
@@ -18,6 +21,7 @@ class Character(pygame.sprite.Sprite):
         speed: float,
         ammo: int,
         health: int = 100,
+        danger: int = 0
     ) -> None:
         """
         Initialize a Character object.
@@ -30,6 +34,7 @@ class Character(pygame.sprite.Sprite):
             speed (float): The speed of the character.
             ammo (int): The initial ammo count of the character.
             health (int, optional): The initial health of the character. Defaults to 100.
+            danger (int): Enemy difficulty specifier.
         """
         pygame.sprite.Sprite.__init__(self)
         self.alive = True
@@ -56,7 +61,7 @@ class Character(pygame.sprite.Sprite):
                 )
                 temp_list.append(img)
             self.animation_list.append(temp_list)
-
+        self.danger = 0 if danger in range(0, 7) else 1 if danger in range(7,10) else 2
         self.image: pygame.Surface = self.animation_list[self.action][self.frame_index]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -69,17 +74,29 @@ class Character(pygame.sprite.Sprite):
         self.width = self.image.get_width()
         self.height = self.image.get_height()
         self.sound = SoundEffect()
+        self.hit_cntdown = 20
         # ai specific variables
         if self.char_type == "enemy":
+            self.residual_ammo = random.randint(3, 8)
+            if self.danger > 0:
+                self.skull_img = pygame.image.load(
+                    f"img/skull/{self.danger}.png"
+                ).convert_alpha()
+                self.skull_img = pygame.transform.scale(
+                    self.skull_img, (int(self.skull_img.get_width() * 0.3), int(self.skull_img.get_height() * 0.3))
+                )
+                self.health += 60 * self.danger
+                self.residual_ammo += 4 * self.danger
+                self.speed += 0.3 * self.danger
+                self.ammo += 30 * self.danger
             self.move_counter = 0
             self.vision = pygame.Rect(0, 0, 150, 20)
             self.idling = False
             self.idling_counter = 0
-            self.residual_ammo = random.randint(3, 8)
         else:
             self.statistics = Statistics()
 
-    def update(self) -> bool | None:
+    def update(self) -> int | None:
         """
         Update the character's state.
 
@@ -89,13 +106,15 @@ class Character(pygame.sprite.Sprite):
         if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
             return
         self.update_animation()
-        if self.check_alive() == Constants.KILL:
-            return True
+        alive = self.check_alive()
+        if alive:
+            return alive
 
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
 
     def move(self, moving_left, moving_right, obstacle_list: List[pygame.Surface]) -> None:
+        
         """
         Move the character.
 
@@ -104,6 +123,9 @@ class Character(pygame.sprite.Sprite):
             moving_right (bool): Indicates if the character is moving right.
             obstacle_list (list): List of obstacles to consider for collision detection.
         """
+        if self.char_type == "enemy":
+            if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
+                return
         screen_scroll = 0
         dx = 0
         dy = 0
@@ -149,18 +171,28 @@ class Character(pygame.sprite.Sprite):
                     self.vel_y = 0
                     self.in_air = False
                     dy = tile[1].top - self.rect.bottom - 1
+                    
 
         if self.char_type == "player":
             for enemy in Constants.enemy_group:
+                if enemy.rect.x > Constants.SCREEN_WIDTH + 200 or enemy.rect.x < -200:
+                    continue
                 if (
                     enemy.rect.colliderect(
                         self.rect.x, self.rect.y, self.width, self.height
                     )
-                    and enemy.residual_ammo > 0
-                    and not enemy.alive
+                    
                 ):
-                    self.ammo += enemy.residual_ammo
-                    enemy.residual_ammo = 0
+                    if not enemy.alive:
+                        if enemy.residual_ammo > 0:
+                            self.ammo += enemy.residual_ammo
+                            enemy.residual_ammo = 0
+                    elif enemy.alive and self.alive:
+                        self.health -= 10 if self.hit_cntdown == 10 else 0
+                        self.hit_cntdown -= 1
+                        if self.hit_cntdown == 0: self.hit_cntdown = 20
+                    
+                    
 
         self.rect.x += dx
         self.rect.y += dy
@@ -181,7 +213,7 @@ class Character(pygame.sprite.Sprite):
     def shoot(self) -> None:
         """Make the character shoot."""
         if self.shoot_cooldown == 0 and self.ammo > 0:
-            self.shoot_cooldown = 20
+            self.shoot_cooldown = 20 if self.danger == 0 else 14 if self.danger == 1 else 10
             bullet = Bullet(
                 self.rect.centerx + (0.6 * self.rect.size[0] * self.direction),
                 self.rect.centery,
@@ -279,7 +311,7 @@ class Character(pygame.sprite.Sprite):
             self.update_action(3)
             if self.alive:
                 self.alive = False
-                return Constants.KILL
+                return Constants.KILL + self.danger
             return 0
         return 0
 
@@ -293,4 +325,8 @@ class Character(pygame.sprite.Sprite):
         if self.char_type == "enemy":
             if self.rect.x > Constants.SCREEN_WIDTH + 200 or self.rect.x < -200:
                 return
+            if self.danger:
+                skullrect = self.rect.move(25, -35)
+                screen.blit(pygame.transform.flip(self.skull_img, not self.flip, False), skullrect)
+        
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)

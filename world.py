@@ -73,6 +73,7 @@ class World:
                             5,
                             20,
                             health=200,
+                            danger=0
                         )
                     elif tile == 16:  # enemy
                         enemy = Character(
@@ -82,7 +83,8 @@ class World:
                             2,
                             2,
                             20,
-                            health=100 + randint(0,5)*20
+                            health=100,
+                            danger=randint(1, 10)
                         )
                         Constants.enemy_group.add(enemy)
                     elif tile == 20:

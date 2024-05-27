@@ -33,6 +33,8 @@ class Constants:
         GAME_START = 2
 
     KILL = 100
+    KILL_RED = 101
+    KILL_PURPLE = 102
     GRAVITY = 0.75
     SCROLL_THRESH = 200
     screen_scroll = 0
