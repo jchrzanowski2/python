@@ -62,3 +62,12 @@ class GameManager:
             if info == Constants.KILL:
                 self.current_state.player.statistics.points += 200
                 self.current_state.player.statistics.kills += 1
+            elif info == Constants.KILL_RED:
+                self.current_state.player.statistics.points += 400
+                self.current_state.player.statistics.kills += 1
+                self.current_state.player.health += 50
+            elif info == Constants.KILL_PURPLE:
+                self.current_state.player.statistics.points += 600
+                self.current_state.player.statistics.kills += 1
+                self.current_state.player.health += 80
+            
