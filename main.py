@@ -1,56 +1,58 @@
 import pygame
-from character import Character
+from constants import Constants
+from game_manager import GameManager
+from observer import Observer
+from pygame import mixer
 
 pygame.init()
 
-SCREEN_WIDTH = 800
+mixer.init()
+pygame.mixer.music.load("audio/music.mp3")
+pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.play(-1, 0.0, 3000)
+
+SCREEN_WIDTH = Constants.SCREEN_WIDTH
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8)
 
-screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-pygame.display.set_caption('Game')
-
-moving_left = False
-moving_right = False
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Game")
 
 clock = pygame.time.Clock()
-FPS = 60
-
-#colors
-BG = (200, 200, 200)
-
-def draw_bg():
-    screen.fill(BG)
 
 
-player = Character('player', 200, 400, 3, 5)
+# colors
+def draw_bg() -> None:
+    screen.fill(Constants.BG)
+
+
+game = GameManager()
+observer = Observer()
+game.current_state.attach(observer)
 
 run = True
 while run:
 
-    clock.tick(FPS)
+    clock.tick(Constants.FPS)
+
     draw_bg()
-    player.draw(screen)
-    player.move(moving_left, moving_right)
+
+    game.update()
+    game.draw(screen)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            run = False
+        else:
+            game.handle_events(event)
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                moving_left = True
-            if event.key == pygame.K_d:
-                moving_right = True
-            if event.key == pygame.K_ESCAPE:
-                run = False
+    if observer.action:
+        observer.act(game)
+        game.current_state.attach(observer)
 
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_a:
-                moving_left = False
-            if event.key == pygame.K_d:
-                moving_right = False
+    observer.pass_info(game)
 
     pygame.display.update()
-
 
 pygame.quit()
