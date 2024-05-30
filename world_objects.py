@@ -1,6 +1,7 @@
 import pygame
 from constants import Constants
 from character import Character
+import config as c
 
 class SpriteGroups:
     """Class representing different groups of sprites in the game."""
@@ -151,5 +152,5 @@ class Diamond(pygame.sprite.Sprite):
         """
         self.rect.x += Constants.screen_scroll
         if pygame.sprite.collide_rect(self, player):
-            player.statistics.points += 100
+            player.statistics.points += c.DIAMOND_PTS
             self.kill()

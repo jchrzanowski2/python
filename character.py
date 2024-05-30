@@ -4,6 +4,7 @@ import random
 from constants import Constants, Statistics, SoundEffect
 from bullet import Bullet
 from typing import List
+import config as c
 
 pygame.font.init()
 font = pygame.font.SysFont(None, 20)
@@ -140,7 +141,7 @@ class Character(pygame.sprite.Sprite):
             self.direction = 1
 
         if self.jump and self.in_air == False:
-            self.vel_y = -15
+            self.vel_y = -c.JUMP
             self.jump = False
             self.in_air = True
 

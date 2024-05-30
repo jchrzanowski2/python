@@ -5,6 +5,7 @@ import csv
 from typing import List
 from world_objects import Decorations, Water, Exit, SpriteGroups, Diamond
 from random import randint
+import config as c
 
 img_list = []
 
@@ -70,9 +71,9 @@ class World:
                             x * Constants.TILE_SIZE,
                             y * Constants.TILE_SIZE,
                             2,
-                            5,
-                            20,
-                            health=200,
+                            c.PL_SPEED,
+                            c.START_AMMO,
+                            health=c.START_HP,
                             danger=0
                         )
                     elif tile == 16:  # enemy
@@ -81,9 +82,9 @@ class World:
                             x * Constants.TILE_SIZE,
                             y * Constants.TILE_SIZE,
                             2,
-                            2,
-                            20,
-                            health=100,
+                            c.ENEMY_SPEED,
+                            c.ENEMY_AMMO,
+                            health=c.ENEMY_HP,
                             danger=randint(1, 10)
                         )
                         Constants.enemy_group.add(enemy)

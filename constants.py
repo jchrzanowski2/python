@@ -1,8 +1,8 @@
 import pygame
 from pygame import mixer
+import config as c
 
 
-# Struct with all constants for easy editing
 class Constants:
     """Class containing various constants used in the game."""
 
@@ -35,7 +35,7 @@ class Constants:
     KILL = 100
     KILL_RED = 101
     KILL_PURPLE = 102
-    GRAVITY = 0.75
+    GRAVITY = c.GRAVITY
     SCROLL_THRESH = 200
     screen_scroll = 0
     bg_scroll = 0

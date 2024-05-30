@@ -2,6 +2,7 @@ from constants import Constants
 from states import *
 import pygame
 from typing import List
+import config as c
 
 class GameManager:
     """Class managing the game state and transitions."""
@@ -60,14 +61,14 @@ class GameManager:
         while infos:
             info = infos.pop()
             if info == Constants.KILL:
-                self.current_state.player.statistics.points += 200
+                self.current_state.player.statistics.points += c.KILL_PTS
                 self.current_state.player.statistics.kills += 1
             elif info == Constants.KILL_RED:
-                self.current_state.player.statistics.points += 400
+                self.current_state.player.statistics.points += c.RED_KILL_PTS
                 self.current_state.player.statistics.kills += 1
-                self.current_state.player.health += 50
+                self.current_state.player.health += c.RED_KILL_HP
             elif info == Constants.KILL_PURPLE:
-                self.current_state.player.statistics.points += 600
+                self.current_state.player.statistics.points += c.PURPLE_KILL_PTS
                 self.current_state.player.statistics.kills += 1
-                self.current_state.player.health += 80
+                self.current_state.player.health += c.PURPLE_KILL_HP
             

@@ -38,11 +38,13 @@ python main.py
 - Collect diamonds for points.
 - Shoot enemies to eliminate them.
 - **Enemy types:** enemies with a red skull shoot faster and have more health points. Purple ones are even more deadly! However, killing them may reward you with more points and HP.
+- Change the default configuration of game parameters in `config.py`.
 
 To win enter the last exit (currently two maps)
 
 ### Notes
 
+- level data (stored in `levelx_data.csv`) contain arrays of ints. Each number represents a different file (where -1 means no file). Refer to `world.py` for details.
 - Ensure that all necessary files, including images and audio, are in the correct directories for the game to run smoothly.
 - Customize game settings and behavior by modifying the appropriate constants and parameters in the code.
 
