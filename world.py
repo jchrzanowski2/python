@@ -74,7 +74,7 @@ class World:
                             c.PL_SPEED,
                             c.START_AMMO,
                             health=c.START_HP,
-                            danger=0
+                            danger=0,
                         )
                     elif tile == 16:  # enemy
                         enemy = Character(
@@ -85,7 +85,7 @@ class World:
                             c.ENEMY_SPEED,
                             c.ENEMY_AMMO,
                             health=c.ENEMY_HP,
-                            danger=randint(1, 10)
+                            danger=randint(1, 10),
                         )
                         Constants.enemy_group.add(enemy)
                     elif tile == 20:

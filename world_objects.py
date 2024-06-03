@@ -3,6 +3,7 @@ from constants import Constants
 from character import Character
 import config as c
 
+
 class SpriteGroups:
     """Class representing different groups of sprites in the game."""
 

@@ -26,11 +26,15 @@ class Constants:
     BLUE = (0, 0, 255)
     ORANGE = (255, 128, 0)
     DARK_GREY = (70, 70, 70)
+    LIGHT_GREEN = (144, 238, 144)
+    BROWN = (193, 154, 107)
 
     class Actions:
         """Class containing game action constants."""
+
         GAME_END = 1
         GAME_START = 2
+        GAME_SCORE = 3
 
     KILL = 100
     KILL_RED = 101
@@ -40,15 +44,17 @@ class Constants:
     screen_scroll = 0
     bg_scroll = 0
     LEVEL_NUM = 2
-    
+
     enemy_group = pygame.sprite.Group()
     bullet_group = pygame.sprite.Group()
 
-    high_score_file = 'high_score.json'
+    high_score_file = "high_score.json"
+    nickname = ""
 
 
 class PlayerActions:
     """Class containing player action flags."""
+
     moving_left = False
     moving_right = False
     shoot = False
@@ -56,6 +62,7 @@ class PlayerActions:
 
 class Statistics:
     """Class containing player statistics."""
+
     time = 0
     points = 0
     bullets_shot = 0
@@ -66,6 +73,7 @@ class Statistics:
 
 class SoundEffect:
     """Class containing sound effects for the game."""
+
     mixer.init()
     jump_fx = pygame.mixer.Sound("audio/jump.wav")
     jump_fx.set_volume(0.2)

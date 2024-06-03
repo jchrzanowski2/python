@@ -4,6 +4,7 @@ import pygame
 from typing import List
 import config as c
 
+
 class GameManager:
     """Class managing the game state and transitions."""
 
@@ -50,6 +51,8 @@ class GameManager:
         elif action == Constants.Actions.GAME_START:
             self.current_state = RunState()
             return
+        elif action == Constants.Actions.GAME_SCORE:
+            self.current_state = ScoreState()
 
     def get_info(self, infos: List[int]) -> None:
         """
@@ -71,4 +74,3 @@ class GameManager:
                 self.current_state.player.statistics.points += c.PURPLE_KILL_PTS
                 self.current_state.player.statistics.kills += 1
                 self.current_state.player.health += c.PURPLE_KILL_HP
-            
